@@ -63,7 +63,7 @@ if uploaded_file:
 
     with st.spinner("Generating AI Insights..."):
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": gpt_prompt}],
             temperature=0.5
         )
