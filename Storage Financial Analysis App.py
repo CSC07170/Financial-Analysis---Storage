@@ -7,8 +7,14 @@ from openai import OpenAI
 st.set_page_config(page_title="Financial AI Analysis", layout="wide")
 st.title("📈 Monthly Real Estate Financial Analysis with AI")
 
-# OpenAI client
-client = OpenAI(api_key=st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else "YOUR_API_KEY")
+# --- Secure OpenAI Client Setup ---
+try:
+    api_key = st.secrets["openai_api_key"]
+except Exception:
+    st.error("❌ OpenAI API key not found. Please add it in Streamlit secrets.")
+    st.stop()
+
+client = OpenAI(api_key=api_key)
 
 # --- FILE UPLOAD ---
 uploaded_file = st.file_uploader("Upload your Excel financials (.xlsx)", type="xlsx")
@@ -79,10 +85,6 @@ if uploaded_file:
 
     st.subheader("🧠 AI Analysis")
     st.write(insights)
-
-    st.subheader("📉 DSCR Over Time")
-    st.line_chart(pd.DataFrame({"DSCR": dscr}, index=months))
-
 
     st.subheader("📉 DSCR Over Time")
     st.line_chart(pd.DataFrame({"DSCR": dscr}, index=months))
