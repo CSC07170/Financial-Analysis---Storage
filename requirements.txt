@@ -1,4 +1,6 @@
 streamlit
-openai
 pandas
 numpy
+openai
+openpyxl
+
