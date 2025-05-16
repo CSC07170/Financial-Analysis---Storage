@@ -7,13 +7,8 @@ from openai import OpenAI
 st.set_page_config(page_title="Financial AI Analysis", layout="wide")
 st.title("📈 Monthly Real Estate Financial Analysis with AI")
 
-# --- Secure OpenAI Client Setup ---
-try:
-    api_key = st.secrets["openai_api_key"]
-except Exception:
-    st.error("❌ OpenAI API key not found. Please add it in Streamlit secrets.")
-    st.stop()
-
+# --- TEMPORARY: Hardcoded API Key for Testing ---
+api_key = "sk-REPLACE_WITH_YOUR_KEY"
 client = OpenAI(api_key=api_key)
 
 # --- FILE UPLOAD ---
