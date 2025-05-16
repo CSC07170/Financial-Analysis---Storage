@@ -1,14 +1,14 @@
 import streamlit as st
 import pandas as pd
-import openai
 import numpy as np
+from openai import OpenAI
 
 # --- SETUP ---
 st.set_page_config(page_title="Financial AI Analysis", layout="wide")
 st.title("📈 Monthly Real Estate Financial Analysis with AI")
 
-# OpenAI API Key (optional: use secrets or env vars)
-openai.api_key = st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else "YOUR_API_KEY"
+# OpenAI client
+client = OpenAI(api_key=st.secrets["openai_api_key"] if "openai_api_key" in st.secrets else "YOUR_API_KEY")
 
 # --- FILE UPLOAD ---
 uploaded_file = st.file_uploader("Upload your Excel financials (.xlsx)", type="xlsx")
@@ -61,12 +61,12 @@ if uploaded_file:
     """
 
     with st.spinner("Generating AI Insights..."):
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=[{"role": "user", "content": gpt_prompt}],
             temperature=0.5
         )
-        insights = response['choices'][0]['message']['content']
+        insights = response.choices[0].message.content
 
     # --- Display Outputs ---
     st.subheader("📋 Summary KPIs")
@@ -79,6 +79,10 @@ if uploaded_file:
 
     st.subheader("🧠 AI Analysis")
     st.write(insights)
+
+    st.subheader("📉 DSCR Over Time")
+    st.line_chart(pd.DataFrame({"DSCR": dscr}, index=months))
+
 
     st.subheader("📉 DSCR Over Time")
     st.line_chart(pd.DataFrame({"DSCR": dscr}, index=months))
